@@ -8,7 +8,8 @@ An application that allows users to make and share "not to do's".
 ```psql```<br>
 ```create role workspace with createdb login password 'password';```<br>
 ```\q```<br>
+```exit```<br>
 ```sudo service postgresql restart```<br>
-```rake db:create```<br>
+```rake db:setup```<br>
 
 After above steps you should be able to run project through 'Run Project' button on Cloud9.
