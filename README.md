@@ -7,6 +7,7 @@ An application that allows users to make and share "not to do's".
 ```sudo su - postgres```<br>
 ```psql```<br>
 ```create role workspace with createdb login password 'password';```<br>
+```\q```<br>
 ```sudo service postgresql restart```<br>
 ```rake db:create```<br>
 
