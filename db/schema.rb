@@ -12,16 +12,14 @@
 
 ActiveRecord::Schema.define(version: 20170709103033) do
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", primary_key: "username", id: :string, limit: 20, force: :cascade do |t|
     t.string "name", limit: 64, null: false
     t.string "surname", limit: 64, null: false
-    t.string "username", limit: 64, null: false
     t.string "email", limit: 64, null: false
-    t.string "password", limit: 64, null: false
+    t.string "password", limit: 32, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["username"], name: "index_users_on_username", unique: true
+    t.index ["username"], name: "sqlite_autoindex_users_1", unique: true
   end
 
 end
