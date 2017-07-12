@@ -6,4 +6,13 @@ class User < ApplicationRecord
     message: "can only contain alphanumeric characters (letters A-Z, numbers 0-9)." }
   validates :email, presence: true, uniqueness: true, length: { maximum: 64 }
   validates :password, presence: true, length: { maximum: 32 }
+
+  def self.authenticate(username, password)
+    user = find_by_username(username)
+    if user && user.password == password
+      user
+    else
+      nil
+    end
+  end
 end
