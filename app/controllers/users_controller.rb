@@ -3,7 +3,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     respond_to do |format|
       format.html
-      format.json { render json: @user }
+      format.json { render json: @user, :except => :password_digest}
     end
   end
 
@@ -12,6 +12,9 @@ class UsersController < ApplicationController
   end
 
   def edit
+    if session[:user_id] != params[:id]
+      redirect_to root_url, :notice => "Unauthorized access!"
+    end
     @user = User.find(params[:id])
   end
 
@@ -19,6 +22,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
+      session[:user_id] = @user.id
       render action: 'show'
     else
       render 'new'
@@ -27,7 +31,6 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
-
     if @user.update(user_params)
       render action: 'show'
     else

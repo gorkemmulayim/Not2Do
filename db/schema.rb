@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20170709103033) do
     t.string "name", limit: 64, null: false
     t.string "surname", limit: 64, null: false
     t.string "email", limit: 64, null: false
-    t.string "password", limit: 32, null: false
+    t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["username"], name: "sqlite_autoindex_users_1", unique: true
