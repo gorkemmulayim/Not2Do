@@ -5,7 +5,7 @@ class CreateUsers < ActiveRecord::Migration[5.1]
       t.string :surname, null: false, limit: 64
       t.string :username, primary_key: true, limit: 20
       t.string :email, unique: true, null: false, limit: 64
-      t.string :password, null: false, limit: 32
+      t.string :password_digest, null: false
 
       t.timestamps
     end
