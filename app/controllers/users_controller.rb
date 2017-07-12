@@ -3,7 +3,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     respond_to do |format|
       format.html
-      format.json { render json: @user }
+      format.json { render json: @user, :except => :password_digest}
     end
   end
 
