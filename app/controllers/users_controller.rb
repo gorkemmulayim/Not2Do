@@ -12,6 +12,9 @@ class UsersController < ApplicationController
   end
 
   def edit
+    if session[:user_id] != params[:id]
+      redirect_to root_url, :notice => "Unauthorized access!"
+    end
     @user = User.find(params[:id])
   end
 
@@ -28,7 +31,6 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
-
     if @user.update(user_params)
       render action: 'show'
     else
