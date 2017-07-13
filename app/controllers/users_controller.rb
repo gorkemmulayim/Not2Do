@@ -32,14 +32,15 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update(user_params)
-      render action: 'show'
+      session[:user_id] = @user.id
+      redirect_to @user, :notice => "Account updated!"
     else
       render 'edit'
     end
   end
 
   private
-    def user_params
-      params.require(:user).permit(:name, :surname, :username, :email, :password)
-    end
+  def user_params
+    params.require(:user).permit(:name, :surname, :username, :email, :password)
+  end
 end
