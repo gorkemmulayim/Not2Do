@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  wrap_parameters :user, include: [:name, :surname, :username, :email, :password, :password_confirmation]
+
   def show
     @user = User.find(params[:id])
     respond_to do |format|
@@ -31,15 +33,21 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
-    if @user.update(user_params)
-      render action: 'show'
+    if @user.authenticate(params[:user][:password])
+      if @user.update(user_params)
+        session[:user_id] = @user.id
+        redirect_to @user, :notice => "Account updated!"
+      else
+        render 'edit'
+      end
     else
+      flash.now.alert = "Invalid username or password!"
       render 'edit'
     end
   end
 
   private
-    def user_params
-      params.require(:user).permit(:name, :surname, :username, :email, :password)
-    end
+  def user_params
+    params.require(:user).permit(:name, :surname, :username, :email, :password, :password_confirmation)
+  end
 end
