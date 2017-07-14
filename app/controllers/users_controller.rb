@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  wrap_parameters :user, include: [:name, :surname, :username, :email, :password, :password_confirmation]
+
   def show
     @user = User.find(params[:id])
     respond_to do |format|

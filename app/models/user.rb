@@ -7,5 +7,5 @@ class User < ApplicationRecord
     format: { with: /\A[a-zA-Z0-9]+\Z/,
     message: "can only contain alphanumeric characters (letters A-Z, numbers 0-9)." }
   validates :email, presence: true, uniqueness: true, length: { maximum: 64 }
-  validates :password, presence: true, length: { maximum: 32 }
+  validates :password, length: { maximum: 32 }
 end
