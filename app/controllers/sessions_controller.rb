@@ -14,7 +14,7 @@ class SessionsController < ApplicationController
       flash.now.alert = "Invalid username or password!"
       respond_to do |format|
         format.html { render 'new' }
-        format.json { render json: "{\"notice\":\"Invalid username or password!\"}" }
+        format.json { render json: "{\"error\":\"Invalid username or password!\"}" }
       end
     end
   end

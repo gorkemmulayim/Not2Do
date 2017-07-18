@@ -6,12 +6,12 @@ class UsersController < ApplicationController
     if @user
       respond_to do |format|
         format.html { render 'show' }
-        format.json { render json: @user, :except => :password_digest}
+        format.json { render json: @user, :except => :password_digest }
       end
     else
       respond_to do |format|
         format.html { redirect_to '/login', :notice => "Please login to see your profile."}
-        format.json { render json: "{\"notice\":\"Please login to see your profile.\"}" }
+        format.json { render json: "{\"error\":\"Please login to see your profile.\"}" }
       end
     end
   end
@@ -22,12 +22,13 @@ class UsersController < ApplicationController
     rescue ActiveRecord::RecordNotFound
       respond_to do |format|
         format.html { redirect_to root_url, :notice => "Could not find user with username '#{params[:id]}'" }
-        format.json { render json: "{\"notice\":\"Could not find user with username '#{params[:id]}'\"}" }
+        format.json { render json: "{\"error\":\"Could not find user with username '#{params[:id]}'\"}" }
       end
+      return
     end
     respond_to do |format|
       format.html
-      format.json { render json: @user, :except => :password_digest}
+      format.json { render json: @user, :except => [:password_digest, :created_at, :updated_at] }
     end
   end
 
