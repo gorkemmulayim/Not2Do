@@ -4,14 +4,27 @@ class UsersController < ApplicationController
   def current_user_profile
     @user = current_user
     if @user
-      render 'show'
+      respond_to do |format|
+        format.html { render 'show' }
+        format.json { render json: @user, :except => :password_digest}
+      end
     else
-      render 'sessions/new'
+      respond_to do |format|
+        format.html { redirect_to '/login', :notice => "Please login to see your profile."}
+        format.json { render json: "{\"notice\":\"Please login to see your profile.\"}" }
+      end
     end
   end
 
   def show
+    begin
     @user = User.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      respond_to do |format|
+        format.html { redirect_to root_url, :notice => "Could not find user with username '#{params[:id]}'" }
+        format.json { render json: "{\"notice\":\"Could not find user with username '#{params[:id]}'\"}" }
+      end
+    end
     respond_to do |format|
       format.html
       format.json { render json: @user, :except => :password_digest}
