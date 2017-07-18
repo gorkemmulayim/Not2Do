@@ -1,6 +1,15 @@
 class UsersController < ApplicationController
   wrap_parameters :user, include: [:name, :surname, :username, :email, :password, :password_confirmation]
 
+  def current_user_profile
+    @user = current_user
+    if @user
+      render 'show'
+    else
+      render 'sessions/new'
+    end
+  end
+
   def show
     @user = User.find(params[:id])
     respond_to do |format|
