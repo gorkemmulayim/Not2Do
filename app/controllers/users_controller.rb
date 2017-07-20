@@ -6,7 +6,7 @@ class UsersController < ApplicationController
     if @user
       respond_to do |format|
         format.html { render 'show' }
-        format.json { render json: @user, :except => :password_digest }
+        format.json { render json: @user, :except => [:password_digest, :created_at, :updated_at] }
       end
     else
       respond_to do |format|
@@ -64,7 +64,7 @@ class UsersController < ApplicationController
         render 'edit'
       end
     else
-      flash.now.alert = "Invalid username or password!"
+      flash.now.alert = "Invalid password!"
       render 'edit'
     end
   end

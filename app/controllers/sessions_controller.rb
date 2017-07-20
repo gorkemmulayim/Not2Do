@@ -8,13 +8,13 @@ class SessionsController < ApplicationController
       session[:user_id] = user.id
       respond_to do |format|
         format.html { redirect_to root_url, :notice => "Logged in!" }
-        format.json { render json: "{\"notice\":\"Logged in!\"}" }
+        format.json { render json: { "status": "success", "user": user.as_json(:except => [:password_digest, :created_at, :updated_at]) }}
       end
     else
       flash.now.alert = "Invalid username or password!"
       respond_to do |format|
         format.html { render 'new' }
-        format.json { render json: "{\"error\":\"Invalid username or password!\"}" }
+        format.json { render :status => :unauthorized, json: { "status": "error", "message": "Invalid username or password!" }}
       end
     end
   end
