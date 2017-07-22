@@ -1,15 +1,24 @@
-# Not2Do
-An application that allows users to make and share "not to do's".
+
+     ,-----.,--.                  ,--. ,---.   ,--.,------.  ,------.
+    '  .--./|  | ,---. ,--.,--. ,-|  || o   \  |  ||  .-.  \ |  .---'
+    |  |    |  || .-. ||  ||  |' .-. |`..'  |  |  ||  |  \  :|  `--, 
+    '  '--'\|  |' '-' ''  ''  '\ `-' | .'  /   |  ||  '--'  /|  `---.
+     `-----'`--' `---'  `----'  `---'  `--'    `--'`-------' `------'
+    ----------------------------------------------------------------- 
 
 
-```bundle install```<br>
-```sudo service postgresql restart```<br>
-```sudo su - postgres```<br>
-```psql```<br>
-```create role workspace with createdb login password 'password';```<br>
-```\q```<br>
-```exit```<br>
-```sudo service postgresql restart```<br>
-```rake db:setup```<br>
+Welcome to your Rails project on Cloud9 IDE!
 
-After above steps you should be able to run project through 'Run Project' button on Cloud9.
+To get started, just do the following:
+
+1. Run the project with the "Run Project" button in the menu bar on top of the IDE.
+2. Preview your new app by clicking on the URL that appears in the Run panel below (https://checklist-ferdem.c9users.io/).
+
+Happy coding!
+The Cloud9 IDE team
+
+
+## Support & Documentation
+
+Visit http://docs.c9.io for support, or to learn more about using Cloud9 IDE. 
+To watch some training videos, visit http://www.youtube.com/user/c9ide

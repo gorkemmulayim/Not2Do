@@ -1,5 +1,29 @@
 Rails.application.routes.draw do
-  root 'welcome#index'
+  
+  devise_for :users
+  
+  resources :items do
+    member do
+      get :participants, :failed_participants
+      patch :fail
+    end
+  end
+  
+  resources :users do
+    member do
+      get :following, :followers
+    end
+  end
+  
+  resources :follows
+  resources :participations do
+    member do
+      patch :fail
+    end
+  end
+  
+  root 'items#index'
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
