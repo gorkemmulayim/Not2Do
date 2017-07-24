@@ -1,25 +1,94 @@
-<p>
-  <strong>Name:</strong>
-  <%= @user.name %>
+<h3> Info </h3>
+<h4> <%= @user.email %> </h4>    
+<p> <%= link_to "followers: " + @user.followers.count.to_s, followers_user_path(@user) %> 
+    <%= link_to "following: " + @user.following.count.to_s, following_user_path(@user) %>
 </p>
 
-<p>
-  <strong>Surname:</strong>
-  <%= @user.surname %>
-</p>
+<% if @user.id != current_user.id %>
+    <% if current_user.following?(@user) %>
+        <%= form_for(current_user.active_relationships.find_by(followee_id: @user.id), html: { method: :delete}) do |f| %>
+            <%= f.submit "Unfollow", class: "btn btn-primary" %>
+        <% end %>
+    <% else %>
+        <%= form_for(current_user.active_relationships.build) do |f| %>
+            <%= hidden_field_tag :followee_id, @user.id %>
+            <%= f.submit "Follow", class: "btn btn-primary" %>
+        <% end %>
+    <% end %>
+<% end %>
+        
+<hr>
 
-<p>
-  <strong>Username:</strong>
-  <%= @user.username %>
-</p>
+<h3> Created not2do's</h3>
 
-<p>
-  <strong>Email:</strong>
-  <%= @user.email %>
-</p>
+<% @items.each do |item| %>
+    <h4> <%= link_to item.title, item %> </h4>
+    <p> <%= item.description %> </p>
+    <p> <%= link_to "participants: " + Participation.where(item_id: item.id).count.to_s, participants_item_path(item) %> 
+        <%= link_to "failed participants: " + Participation.where(item_id: item.id, failed: true).count.to_s, failed_participants_item_path(item) %> 
+    </p>        
+    <% if item.user_id == current_user.id %>
+        <%= link_to "Edit", edit_item_path(item), class: "btn btn-primary" %>
+        <%= link_to "Delete", item_path(item), class: "btn btn-primary", method: :delete, data: { confirm: "Are you sure?" } %>
+        <% if !item.failed %>
+            <%= link_to "Fail", fail_item_path(item), class: "btn btn-primary", method: :patch %>
+        <% else %>
+            <button class="btn btn-primary" disabled>Failed</button>
+        <% end %>
+    <% elsif current_user.participating?(item) %>
+        <button class="btn btn-primary" disabled>Participated</button>
+        <% participation = Participation.where(user_id: current_user.id, item_id: item.id).first %> 
+        <% if !participation.failed %>
+            <%= link_to "Fail", fail_participation_path(participation), class: "btn btn-primary", method: :patch %>
+        <% else %>
+            <button class="btn btn-primary" disabled>Failed</button>
+        <% end %>
+    <% else %>
+        <%= form_for(current_user.active_relationships2.build) do |f| %>
+            <%= hidden_field_tag :item_id, item.id %>
+            <%= f.submit "Participate", class: "btn btn-primary"%>
+        <% end %>
+    <% end %>
+    <hr>
+<% end %>
 
-<%= link_to 'Home', welcome_index_path %>
 
-<% if current_user == @user%>
-  <%= link_to 'Edit', edit_user_path(@user) %>
+<h3> Participated not2do's</h3>
+
+<% @participated.each do |item| %>
+    <h4> <%= link_to item.title, item %> </h4>
+    <p> <%= item.description %> </p>
+    <p> <%= link_to User.find(item.user_id).email + ": ", User.find(item.user_id)%> 
+        <% if item.failed %>
+            <%= "Failed" %>
+        <% else %>
+            <%= "On going" %>
+        <% end %>
+    </p>
+    <p> <%= link_to "participants: " + Participation.where(item_id: item.id).count.to_s, participants_item_path(item) %> 
+        <%= link_to "failed participants: " + Participation.where(item_id: item.id, failed: true).count.to_s, failed_participants_item_path(item) %> 
+    </p>        
+    <% if item.user_id == current_user.id %>
+        <%= link_to "Edit", edit_item_path(item), class: "btn btn-primary" %>
+        <%= link_to "Delete", item_path(item), class: "btn btn-primary", method: :delete, data: { confirm: "Are you sure?" } %>
+        <% if !item.failed %>
+            <%= link_to "Fail", fail_item_path(item), class: "btn btn-primary", method: :patch %>
+        <% else %>
+            <button class="btn btn-primary" disabled>Failed</button>
+        <% end %>
+    <% elsif current_user.participating?(item) %>
+        <button class="btn btn-primary" disabled>Participated</button>
+        <% participation = Participation.where(user_id: current_user.id, item_id: item.id).first %> 
+        <% if !participation.failed %>
+            <%= link_to "Fail", fail_participation_path(participation), class: "btn btn-primary", method: :patch %>
+        <% else %>
+            <button class="btn btn-primary" disabled>Failed</button>
+        <% end %>
+    <% else %>
+        <%= form_for(current_user.active_relationships2.build) do |f| %>
+            <%= hidden_field_tag :item_id, item.id %>
+            <%= f.submit "Participate", class: "btn btn-primary"%>
+        <% end %>
+    <% end %>
+    <hr>
 <% end %>
