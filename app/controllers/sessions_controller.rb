@@ -3,19 +3,18 @@ class SessionsController < ApplicationController
   end
 
   def create
-    Rails.logger.debug("My object: #{params[:username]}")
     user = User.find_by_username(params[:username])
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
       respond_to do |format|
         format.html { redirect_to root_url, :notice => "Logged in!" }
-        format.json { render json:  "{\"notice\":\"Logged in!\"}" }
+        format.json { render json: { "status": "success", "user": user.as_json(:except => [:password_digest, :created_at, :updated_at]) }}
       end
     else
       flash.now.alert = "Invalid username or password!"
       respond_to do |format|
         format.html { render 'new' }
-        format.json { render json: flash.to_hash}
+        format.json { render :status => :unauthorized, json: { "status": "error", "message": "Invalid username or password!" }}
       end
     end
   end

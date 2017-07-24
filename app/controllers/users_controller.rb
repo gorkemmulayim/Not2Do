@@ -1,11 +1,34 @@
 class UsersController < ApplicationController
   wrap_parameters :user, include: [:name, :surname, :username, :email, :password, :password_confirmation]
 
+  def current_user_profile
+    @user = current_user
+    if @user
+      respond_to do |format|
+        format.html { render 'show' }
+        format.json { render json: @user, :except => [:password_digest, :created_at, :updated_at] }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to '/login', :notice => "Please login to see your profile."}
+        format.json { render json: "{\"error\":\"Please login to see your profile.\"}" }
+      end
+    end
+  end
+
   def show
+    begin
     @user = User.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      respond_to do |format|
+        format.html { redirect_to root_url, :notice => "Could not find user with username '#{params[:id]}'" }
+        format.json { render json: "{\"error\":\"Could not find user with username '#{params[:id]}'\"}" }
+      end
+      return
+    end
     respond_to do |format|
       format.html
-      format.json { render json: @user, :except => :password_digest}
+      format.json { render json: @user, :except => [:password_digest, :created_at, :updated_at] }
     end
   end
 
@@ -41,7 +64,7 @@ class UsersController < ApplicationController
         render 'edit'
       end
     else
-      flash.now.alert = "Invalid username or password!"
+      flash.now.alert = "Invalid password!"
       render 'edit'
     end
   end
