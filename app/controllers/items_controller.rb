@@ -49,7 +49,7 @@ class ItemsController < ApplicationController
     
     def fail
         @item.update_attribute(:failed, true)
-        redirect_to :back
+        redirect_back fallback_location: root_path
     end
     
     def failed_participants
