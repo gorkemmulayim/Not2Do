@@ -22,8 +22,5 @@ test:
 
 production:
   adapter: postgresql
-  encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  database: not2do
-  username: not2do
-  password: <%= ENV['NOT2DO_DATABASE_PASSWORD'] %>
+  timeout: 5000
