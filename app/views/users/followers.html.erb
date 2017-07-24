@@ -1,0 +1,19 @@
+<% @followers.each do |user| %>
+    <h4> <%= link_to user.email, user %> <h4>    
+    <p> <%= link_to "followers: " + user.followers.count.to_s, followers_user_path(user) %> 
+        <%= link_to "following: " + user.following.count.to_s, following_user_path(user) %>
+    </p>
+    <% if user.id != current_user.id %>
+        <% if current_user.following?(user) %>
+            <%= form_for(current_user.active_relationships.find_by(followee_id: user.id), html: { method: :delete}) do |f| %>
+                <%= f.submit "Unfollow", class: "btn btn-primary" %>
+            <% end %>
+        <% else %>
+            <%= form_for(current_user.active_relationships.build) do |f| %>
+                <%= hidden_field_tag :followee_id, user.id %>
+                <%= f.submit "Follow", class: "btn btn-primary" %>
+            <% end %>
+        <% end %>
+    <% end %>
+    <hr>
+<% end %>

@@ -1,76 +1,34 @@
 class UsersController < ApplicationController
-  wrap_parameters :user, include: [:name, :surname, :username, :email, :password, :password_confirmation]
-
-  def current_user_profile
-    @user = current_user
-    if @user
-      respond_to do |format|
-        format.html { render 'show' }
-        format.json { render json: @user, :except => [:password_digest, :created_at, :updated_at] }
-      end
-    else
-      respond_to do |format|
-        format.html { redirect_to '/login', :notice => "Please login to see your profile."}
-        format.json { render json: "{\"error\":\"Please login to see your profile.\"}" }
-      end
+    before_action :find_user, only: [:show, :edit, :update, :destroy, :following, :followers]
+    
+    def index
+        @users = User.all.order("created_at DESC")    
     end
-  end
-
-  def show
-    begin
-    @user = User.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      respond_to do |format|
-        format.html { redirect_to root_url, :notice => "Could not find user with username '#{params[:id]}'" }
-        format.json { render json: "{\"error\":\"Could not find user with username '#{params[:id]}'\"}" }
-      end
-      return
+    
+    def show
+        @items = Item.where(user_id: @user.id).order("created_at DESC")
+        participated_ids = Participation.where(user_id: @user.id).select(:item_id)
+        @participated = Item.where(id: participated_ids)
     end
-    respond_to do |format|
-      format.html
-      format.json { render json: @user, :except => [:password_digest, :created_at, :updated_at] }
+    
+    def destroy
+        @user.destroy
+        redirect_to root_path
     end
-  end
-
-  def new
-    @user = User.new
-  end
-
-  def edit
-    if session[:user_id] != params[:id]
-      redirect_to root_url, :notice => "Unauthorized access!"
+    
+    def following
+        following_ids = Follow.where(follower_id: @user.id).select(:followee_id)
+        @following = User.where(id: following_ids)
     end
-    @user = User.find(params[:id])
-  end
-
-  def create
-    @user = User.new(user_params)
-
-    if @user.save
-      session[:user_id] = @user.id
-      render action: 'show'
-    else
-      render 'new'
+    
+    def followers
+        follower_ids = Follow.where(followee_id: @user.id).select(:follower_id);
+        @followers = User.where(id: follower_ids)
     end
-  end
-
-  def update
-    @user = User.find(params[:id])
-    if @user.authenticate(params[:user][:password])
-      if @user.update(user_params)
-        session[:user_id] = @user.id
-        redirect_to @user, :notice => "Account updated!"
-      else
-        render 'edit'
-      end
-    else
-      flash.now.alert = "Invalid password!"
-      render 'edit'
+    
+    private 
+    
+    def find_user
+        @user = User.find(params[:id])        
     end
-  end
-
-  private
-  def user_params
-    params.require(:user).permit(:name, :surname, :username, :email, :password, :password_confirmation)
-  end
 end
