@@ -5,11 +5,22 @@ class ItemsController < ApplicationController
         if user_signed_in?
             followings = Follow.where(follower_id: current_user.id).select(:followee_id)
             @items = Item.where(user_id: followings).order("created_at DESC")
+        
+            respond_to do |format|
+                format.html # show.html.erb
+                format.json { render :json => {:item => @item, :items => @items, :users => @followings } }
+            end
         end
     end
     
     def new
         @item = current_user.items.build
+    
+#Bu burda olmalı mı olmamalı mı yoksa hiç değişmemeli mi?
+        respond_to do |format|
+            format.html # show.html.erb
+            format.json { render :json => {:item => @item } }
+        end
     end
     
     def create
@@ -19,14 +30,29 @@ class ItemsController < ApplicationController
         else
             render 'new'
         end
+    
+        respond_to do |format|
+            format.html # show.html.erb
+            format.json { render :json => {:item => @item } }
+        end
     end
     
     def show
         
+        
+        respond_to do |format|
+            format.html # show.html.erb
+            format.json { render :json => {:item => @item } }
+        end
     end
     
     def edit
         
+        
+        respond_to do |format|
+            format.html # show.html.erb
+            format.json { render :json => {:item => @item } }
+        end
     end
     
     def update
@@ -34,6 +60,11 @@ class ItemsController < ApplicationController
             redirect_to item_path(@item)
         else
             render 'edit'
+        end
+        
+        respond_to do |format|
+            format.html # show.html.erb
+            format.json { render :json => {:item => @item } }
         end
     end
     
@@ -45,6 +76,11 @@ class ItemsController < ApplicationController
     def participants
         participant_ids = Participation.where(item_id: @item.id).select(:user_id)
         @participants = User.where(id: participant_ids)
+    
+        respond_to do |format|
+            format.html # show.html.erb
+            format.json { render :json => {:item => @item, :users => @participants } }
+        end
     end
     
     def fail
@@ -55,6 +91,11 @@ class ItemsController < ApplicationController
     def failed_participants
         failed_participant_ids = Participation.where(item_id: @item.id, failed: true).select(:user_id)
         @failed_participants = User.where(id: failed_participant_ids)
+    
+        respond_to do |format|
+            format.html # show.html.erb
+            format.json { render :json => {:item => @item, :users => @failed_participants } }
+        end
     end
     
     private 
