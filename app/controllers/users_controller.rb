@@ -1,53 +1,56 @@
 class UsersController < ApplicationController
-  wrap_parameters :user, include: [:name, :surname, :username, :email, :password, :password_confirmation]
-
-  def show
-    @user = User.find(params[:id])
-    respond_to do |format|
-      format.html
-      format.json { render json: @user, :except => :password_digest}
+    before_action :find_user, only: [:show, :edit, :update, :destroy, :following, :followers]
+    
+    def index
+        @users = User.all.order("created_at DESC")     
+        
+        respond_to do |format|
+            format.html # show.html.erb
+            format.json { render :json => {:user => @user, :users => @users } }
+        end
     end
-  end
-
-  def new
-    @user = User.new
-  end
-
-  def edit
-    if session[:user_id] != params[:id]
-      redirect_to root_url, :notice => "Unauthorized access!"
+    
+    def show
+        @items = Item.where(user_id: @user.id).order("created_at DESC")
+        participated_ids = Participation.where(user_id: @user.id).select(:item_id)
+        @participated = Item.where(id: participated_ids)
+        
+        respond_to do |format|
+          format.html # show.html.erb
+          format.json { render :json => {:user => @user, :items => @items, :users => @participated } }
+        end
     end
-    @user = User.find(params[:id])
-  end
-
-  def create
-    @user = User.new(user_params)
-
-    if @user.save
-      session[:user_id] = @user.id
-      render action: 'show'
-    else
-      render 'new'
+    
+    
+    def destroy
+        @user.destroy
+        redirect_to root_path
     end
-  end
-
-  def update
-    @user = User.find(params[:id])
-    if @user.authenticate(params[:user][:password])
-      if @user.update(user_params)
-        session[:user_id] = @user.id
-        redirect_to @user, :notice => "Account updated!"
-      else
-        render 'edit'
-      end
-    else
-      flash.now.alert = "Invalid username or password!"
-      render 'edit'
+    
+    
+    def following
+        following_ids = Follow.where(follower_id: @user.id).select(:followee_id)
+        @following = User.where(id: following_ids)
+        
+        respond_to do |format|
+          format.html # show.html.erb
+          format.json { render :json => {:user => @user, :users => @following } }
+        end
     end
-  end
-
-  private
-  def user_params
-    params.require(:user).permit(:name, :surname, :username, :email, :password, :password_confirmation)
-  end
+    
+    def followers
+        follower_ids = Follow.where(followee_id: @user.id).select(:follower_id);
+        @followers = User.where(id: follower_ids)
+        
+        respond_to do |format|
+          format.html # show.html.erb
+          format.json { render :json => {:user => @user, :users => @followers } }
+        end
+    end
+    
+    private 
+    
+    def find_user
+        @user = User.find(params[:id])        
+    end
 end
