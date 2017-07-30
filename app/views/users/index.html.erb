@@ -1,3 +1,8 @@
+<%= form_tag(users_path) do %>
+  <%= text_field_tag :term %>
+  <%= submit_tag 'Search User' %>
+<% end %>
+
 <% @users.each do |user| %>
     <% if user.id != current_user.id %>
         <h4> <%= link_to user.email, user %> </h4>
