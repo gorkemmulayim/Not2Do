@@ -8,6 +8,8 @@ class UsersController < ApplicationController
             format.html # show.html.erb
             format.json { render :json => {:user => @user, :users => @users } }
         end
+        
+        @users = User.search(params[:term])
     end
     
     def show
@@ -53,4 +55,9 @@ class UsersController < ApplicationController
     def find_user
         @user = User.find(params[:id])        
     end
+    
+    def user_params
+        params.require(:user).permit(:email)
+    end
+    
 end

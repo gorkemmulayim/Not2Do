@@ -28,6 +28,14 @@ class User < ActiveRecord::Base
     !Participation.where(item_id: item.id, user_id: self.id).empty?
   end
   
+  def self.search(term)
+    if term
+      where('email LIKE ?', "%#{term}%")
+    else
+     all
+    end
+  end
+  
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
