@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   
-  devise_for :users
+  devise_for :users, :controllers => { registrations: 'registrations'}
   
   resources :items do
     member do
@@ -12,6 +12,14 @@ Rails.application.routes.draw do
   resources :users do
     member do
       get :following, :followers
+    end
+    ### Mobile API ###
+    collection do 
+      post :sign_up, :log_in, 
+           :timeline, :discover, :all, :profile,
+           :participate, :failed, :participants, :failed_participants, 
+           :follow, :unfollow, :followers2, :followings2,
+           :create_item, :delete_item
     end
   end
   
