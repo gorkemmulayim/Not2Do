@@ -77,7 +77,7 @@ class UsersController < ApplicationController
         surname = params[:surname]
         bio = params[:bio]
         
-        if user_id.nil? or email.nil? or username.nil? or name.nil? or surname.nil?
+        if user_id.blank? or email.blank? or username.blank? or name.blank? or surname.blank?
            render json: {error: true, error_msg: "Name, surname, username and email must not be empty"}
         else
             new_user = User.update(user_id, email: email, username: username, name: name, 
@@ -94,7 +94,7 @@ class UsersController < ApplicationController
         user = User.find_for_authentication(email: params[:email])
         
         if user != nil && user.valid_password?(params[:password])
-            render json: {error: false, user_id: user.id, token: user.id}
+            render json: {error: false, user_id: user.id, token: user.id.to_s, username: user.username}
         else
             user = User.find_for_authentication(username: params[:email])
         
