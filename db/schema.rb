@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,80 +10,51 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170702101815) do
+ActiveRecord::Schema.define(version: 20170728181451) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
-  create_table "follows", id: false, force: :cascade do |t|
-    t.integer  "follower_id",  null: false
-    t.integer  "following_id", null: false
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+  create_table "follows", force: :cascade do |t|
+    t.integer "follower_id"
+    t.integer "followee_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  add_index "follows", ["follower_id"], name: "index_follows_on_follower_id", using: :btree
-  add_index "follows", ["following_id"], name: "index_follows_on_following_id", using: :btree
-
-  create_table "not2dos", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "privacy",                       default: 0
-    t.integer  "participant_count",             default: 0
-    t.string   "content",           limit: 256
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
+  create_table "items", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.boolean "failed", default: false
   end
 
-  add_index "not2dos", ["user_id"], name: "index_not2dos_on_user_id", using: :btree
-
-  create_table "notifications", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "message",    limit: 256, null: false
-    t.string   "link",       limit: 256
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+  create_table "participations", force: :cascade do |t|
+    t.integer "item_id"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "failed", default: false
   end
-
-  add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree
-
-  create_table "participate", id: false, force: :cascade do |t|
-    t.integer  "user_id",                       null: false
-    t.integer  "not2do_id",                     null: false
-    t.integer  "supervisor_id"
-    t.boolean  "failed",        default: false
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-  end
-
-  add_index "participate", ["not2do_id"], name: "index_participate_on_not2do_id", using: :btree
-  add_index "participate", ["supervisor_id"], name: "index_participate_on_supervisor_id", using: :btree
-  add_index "participate", ["user_id"], name: "index_participate_on_user_id", using: :btree
-
-  create_table "tokens", primary_key: "user_id", force: :cascade do |t|
-    t.string   "token",           limit: 128
-    t.datetime "expiration_date",             default: '2017-07-05 10:48:06', null: false
-  end
-
-  add_index "tokens", ["user_id"], name: "index_tokens_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "username",   limit: 32,  null: false
-    t.string   "email",      limit: 128, null: false
-    t.string   "password",   limit: 64,  null: false
-    t.string   "name",       limit: 32,  null: false
-    t.string   "surname",    limit: 32
-    t.string   "pp_url",     limit: 128
-    t.string   "bio",        limit: 256
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "username"
+    t.text "bio"
+    t.string "name"
+    t.string "surname"
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "follows", "users", column: "follower_id"
-  add_foreign_key "follows", "users", column: "following_id"
-  add_foreign_key "not2dos", "users"
-  add_foreign_key "notifications", "users"
-  add_foreign_key "participate", "not2dos"
-  add_foreign_key "participate", "users"
-  add_foreign_key "participate", "users", column: "supervisor_id"
-  add_foreign_key "tokens", "users"
 end

@@ -1,5 +1,37 @@
 Rails.application.routes.draw do
-  root 'welcome#index'
+  
+  devise_for :users, :controllers => { registrations: 'registrations'}
+  
+  resources :items do
+    member do
+      get :participants, :failed_participants
+      patch :fail
+    end
+  end
+  
+  resources :users do
+    member do
+      get :following, :followers
+    end
+    ### Mobile API ###
+    collection do 
+      post :sign_up, :log_in, 
+           :timeline, :discover, :all, :profile,
+           :participate, :failed, :participants, :failed_participants, 
+           :follow, :unfollow, :followers2, :followings2,
+           :create_item, :delete_item
+    end
+  end
+  
+  resources :follows
+  resources :participations do
+    member do
+      patch :fail
+    end
+  end
+  
+  root 'items#index'
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
