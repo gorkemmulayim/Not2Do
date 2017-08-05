@@ -144,7 +144,7 @@ class UsersController < ApplicationController
     end
     
     def all
-        render json: {users: User.where.not(id: params[:user_id] ).order("user_name ASC")}
+        render json: {users: User.where.not(id: params[:user_id] ).order("username ASC")}
     end
     
     def profile
