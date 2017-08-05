@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     end
     ### Mobile API ###
     collection do 
-      post :sign_up, :log_in, 
+      post :sign_up, :log_in, :edit_profile,
            :timeline, :discover, :all, :profile,
            :participate, :failed, :participants, :failed_participants, 
            :follow, :unfollow, :followers2, :followings2,

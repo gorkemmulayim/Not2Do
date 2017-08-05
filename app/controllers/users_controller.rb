@@ -69,11 +69,32 @@ class UsersController < ApplicationController
         end
     end
     
+    def edit_profile
+        user_id = params[:user_id]
+        email = params[:email]
+        username = params[:username]
+        name = params[:name]
+        surname = params[:surname]
+        bio = params[:bio]
+        
+        if user_id.blank? or email.blank? or username.blank? or name.blank? or surname.blank?
+           render json: {error: true, error_msg: "Name, surname, username and email must not be empty"}
+        else
+            new_user = User.update(user_id, email: email, username: username, name: name, 
+                                    surname: surname, bio: bio)
+            if new_user.save
+                render json: {error: false, user_id: new_user.id, token: new_user.id.to_s, username: new_user.username}
+            else
+                render json: {error: true, error_msg: "Email and username must be unique"}
+            end
+        end
+    end
+    
     def log_in
         user = User.find_for_authentication(email: params[:email])
         
         if user != nil && user.valid_password?(params[:password])
-            render json: {error: false, user_id: user.id, token: user.id}
+            render json: {error: false, user_id: user.id, token: user.id.to_s, username: user.username}
         else
             user = User.find_for_authentication(username: params[:email])
         
@@ -144,7 +165,7 @@ class UsersController < ApplicationController
     end
     
     def all
-        render json: {users: User.where.not(id: params[:user_id] ).order("user_name ASC")}
+        render json: {users: User.where.not(id: params[:user_id] ).order("username ASC")}
     end
     
     def profile
