@@ -16,7 +16,7 @@ class ItemsController < ApplicationController
     def new
         @item = current_user.items.build
     
-#Bu burda olmalı mı olmamalı mı yoksa hiç değişmemeli mi?
+        # Bu burda olmalı mı olmamalı mı yoksa hiç değişmemeli mi?
         respond_to do |format|
             format.html # show.html.erb
             format.json { render :json => {:item => @item } }
