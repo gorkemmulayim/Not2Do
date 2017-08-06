@@ -1,12 +1,16 @@
-<h2> <%= @user.name + " " + @user.surname %> </h2>
-<h4> <%= @user.email %> </h4> 
-<h3> <%= @user.bio %></h3>
+<h2> <%= @user.name + " " + @user.surname + " (@" + @user.username + ")" %> </h2>
+<h4> <%= @user.email %> </h4>
+<h4> <%= @user.bio %> </h4>
+
+<% if @user.id == current_user.id %>
+    <%= link_to "Edit Profile", edit_user_path(@user) %>
+<% end %>
 <p> <%= link_to "followers: " + @user.followers.count.to_s, followers_user_path(@user) %> 
     <%= link_to "following: " + @user.following.count.to_s, following_user_path(@user) %>
 </p>
 
 <% if @user.id != current_user.id %>
-    <h4> <%= "Last seen: " + @user.last_sign_in_at.strftime('%m/%d/%Y') %></h4>
+    <h4> <%= "Last seen: " + @user.last_sign_in_at.strftime('%H.%M') + " " + @user.last_sign_in_at.strftime('%d/%m/%Y') %></h4>
     <% if current_user.following?(@user) %>
         <%= form_for(current_user.active_relationships.find_by(followee_id: @user.id), html: { method: :delete}) do |f| %>
             <%= f.submit "Unfollow", class: "btn btn-primary" %>

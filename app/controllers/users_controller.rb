@@ -23,6 +23,14 @@ class UsersController < ApplicationController
         end
     end
     
+    def update
+        if @user.update(params.require(:user).permit(:id))
+            redirect_to user_path(@user)
+        else 
+            render 'edit'
+        end
+    end
+    
     
     def destroy
         @user.destroy
