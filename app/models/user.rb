@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
   
   def self.search(term)
     if term
-      where('email LIKE ?', "%#{term}%")
+      where('username LIKE ?', "%#{term}%")
     else
      all
     end

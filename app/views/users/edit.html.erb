@@ -1,0 +1,9 @@
+<h1>Edit Profile</h1>
+
+<%= simple_form_for current_user do |f| %>
+    <%= f.input :name, label: "Name" %>
+    <%= f.input :surname, label: "Surname" %>
+    <%= f.input :username, label: "Username" %>
+    <%= f.input :bio, as: :text, label: "Bioghraphy" %>
+    <%= f.button :submit %>
+<% end %>

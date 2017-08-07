@@ -23,6 +23,14 @@ class UsersController < ApplicationController
         end
     end
     
+    def update
+        if @user.update(params.require(:user).permit(:id, :name, :surname, :bio))
+            redirect_to user_path(@user)
+        else 
+            render 'edit'
+        end
+    end
+    
     
     def destroy
         @user.destroy
@@ -283,7 +291,7 @@ class UsersController < ApplicationController
     end
     
     def user_params
-        params.require(:user).permit(:email)
+        params.require(:user).permit(:username)
     end
     
 end
