@@ -9,8 +9,9 @@
     <%= link_to "following: " + @user.following.count.to_s, following_user_path(@user) %>
 </p>
 
+ <h4> <%= @user.username + " registered at: " + @user.created_at.strftime('%H.%M') + " " + @user.created_at.strftime('%d/%m/%Y') %></h4>
+
 <% if @user.id != current_user.id %>
-    <h4> <%= "Last seen: " + @user.last_sign_in_at.strftime('%H.%M') + " " + @user.last_sign_in_at.strftime('%d/%m/%Y') %></h4>
     <% if current_user.following?(@user) %>
         <%= form_for(current_user.active_relationships.find_by(followee_id: @user.id), html: { method: :delete}) do |f| %>
             <%= f.submit "Unfollow", class: "btn btn-primary" %>
