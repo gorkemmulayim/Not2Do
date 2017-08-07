@@ -5,7 +5,8 @@
 
 <% @users.each do |user| %>
     <% if user.id != current_user.id %>
-        <h4> <%= link_to user.email, user %> </h4>
+        <h4> <%= link_to "@" + user.username, user %> </h4>
+        <h4> <%= user.name + " " + user.surname %> </h4>
         <p> <%= link_to "followers: " + user.followers.count.to_s, followers_user_path(user) %> 
             <%= link_to "following: " + user.following.count.to_s, following_user_path(user) %>
         </p>
