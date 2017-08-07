@@ -25,7 +25,6 @@ class UsersController < ApplicationController
     
     def update
         if @user.update(params.require(:user).permit(:id))
-            @user.save
             redirect_to user_path(@user)
         else 
             render 'edit'
