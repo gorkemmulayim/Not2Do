@@ -284,13 +284,16 @@ class UsersController < ApplicationController
         Item.find(params[:item_id]).destroy
     end
 
+    def set_fcm_token
+      user = User.find(params[:user_id])
+      user.update_attribute(:fcm_token, params[:fcm_token])
+      render :json => { error: false }
+    end
+
     private
 
     def find_user
         @user = User.find(params[:id])
-    end
-
-    def set_fcm_token
     end
 
     def user_params
