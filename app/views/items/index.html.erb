@@ -2,6 +2,7 @@
     <h3> What not2do? </h3>
     <%= link_to "create not2do", new_item_path, class: "btn btn-primary" %>
     <hr>
+
     <% @items.each do |item| %>
         <h4> <%= link_to item.title, item %> </h4>
         <p> <%= item.description %> </p>
@@ -11,6 +12,8 @@
             <% else %>
                 <%= "On going" %>
             <% end %>
+            <br>
+            <%= "Created At: " + item.created_at.strftime('%d/%m/%y') %>
         </p>
         <p> <%= link_to "participants: " + Participation.where(item_id: item.id).count.to_s, participants_item_path(item) %> 
             <%= link_to "failed participants: " + Participation.where(item_id: item.id, failed: true).count.to_s, failed_participants_item_path(item) %> 
